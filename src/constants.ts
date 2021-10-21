@@ -2,17 +2,20 @@ export const users = [
   {
     id: "Sam",
     name: "Sam",
-    picture: "",
+    picture:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSagAo_-Zyd9E2EcUyFERuN8CrSoBPs9fYFHQ&usqp=CAU",
   },
   {
     id: "Russell",
     name: "Russell",
-    picture: "",
+    picture:
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQAx0xs8hutsj14TS0mw8CWwlyzD7bE1pGXHGD3VOcWwdeae5qZKZol15_U5hhiA8bvgWU&usqp=CAU",
   },
   {
     id: "Joyse",
     name: "Joyse",
-    picture: "",
+    picture:
+      "https://t4.ftcdn.net/jpg/02/78/70/99/360_F_278709964_PhS3MsOE9udVYb5VCin1xCQJlm3HFb9V.jpg",
   },
 ];
 
