@@ -3,9 +3,19 @@
 @tailwind utilities;
 
 html {
-  /* @apply bg-gray-300; */
+  @apply bg-primary-800;
+  /* background-color: #0e1a25; */
 }
 html,
 body {
   height: 100%;
+}
+
+.chat-header {
+  @apply bg-primary-400 py-3;
+}
+
+.conversation-container {
+  background: url(https://i.pinimg.com/originals/9f/1d/81/9f1d818dc9596a4d3d9f71ebbe2d15d3.jpg)
+    no-repeat scroll center center / cover;
 }

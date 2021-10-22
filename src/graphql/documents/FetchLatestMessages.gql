@@ -1,0 +1,7 @@
+#import "../../fragments/Message.gql"
+
+query FetchLatestMessages($channelId: String!) {
+  fetchLatestMessages(channelId: $channelId) {
+    ...Message
+  }
+}

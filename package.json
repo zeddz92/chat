@@ -3,19 +3,28 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "gql:types": "graphql-codegen --config codegen.yml"
   },
   "dependencies": {
+    "@apollo/client": "^3.4.16",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
     "@mui/icons-material": "^5.0.4",
     "@mui/material": "^5.0.4",
     "classnames": "^2.2.6",
+    "graphql": "^15.6.1",
     "next": "latest",
     "react": "^17.0.2",
     "react-dom": "^17.0.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.2.1",
+    "@graphql-codegen/fragment-matcher": "^3.1.0",
+    "@graphql-codegen/introspection": "2.1.0",
+    "@graphql-codegen/typescript": "^2.2.4",
+    "@graphql-codegen/typescript-operations": "^2.1.8",
+    "@graphql-codegen/typescript-react-apollo": "^3.1.6",
     "@types/classnames": "^2.3.1",
     "@types/node": "^16.11.1",
     "@types/react": "^17.0.30",

@@ -1,0 +1,7 @@
+#import "../../fragments/Message.gql"
+
+query FetchMoreMessages($channelId: String!, messageId: String!, $old: Boolean!) {
+  fetchMoreMessages(channelId: $channelId) {
+    ...Message
+  }
+}
