@@ -3,4 +3,6 @@ fragment Message on Message {
   userId
   text
   datetime
+  error @client
+  status @client
 }

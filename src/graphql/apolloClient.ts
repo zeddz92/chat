@@ -20,7 +20,25 @@ const createApolloClient = () => {
         errorPolicy: "all",
       },
     },
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        Message: {
+          keyFields: ["messageId"],
+          fields: {
+            error: {
+              read(error = "") {
+                return error;
+              },
+            },
+            status: {
+              read(status = "DEFAULT") {
+                return status;
+              },
+            },
+          },
+        },
+      },
+    }),
   });
 };
 

@@ -12,14 +12,16 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** A date-time with an offset from UTC/Greenwich in the ISO-8601 calendar system using the format ParseCaseSensitive(false)(ParseCaseSensitive(false)(Value(Year,4,10,EXCEEDS_PAD)'-'Value(MonthOfYear,2)'-'Value(DayOfMonth,2))'T'(Value(HourOfDay,2)':'Value(MinuteOfHour,2)[':'Value(SecondOfMinute,2)[Fraction(NanoOfSecond,0,9,DecimalPoint)]]))ParseStrict(false)Offset(+HH:MM:ss,'Z')ParseStrict(true) */
+  /** A date-time with an offset from UTC/Greenwich in the ISO-8601 calendar system using the format 1970-01-01T00:00:00Z */
   OffsetDateTime: any;
 };
 
 export type Message = {
   __typename?: 'Message';
   datetime: Scalars['OffsetDateTime'];
+  error?: Maybe<Scalars['Int']>;
   messageId: Scalars['String'];
+  status?: Maybe<Scalars['String']>;
   text: Scalars['String'];
   userId: Scalars['String'];
 };
@@ -93,12 +95,7 @@ export type QueriesFetchMoreMessagesArgs = {
   old: Scalars['Boolean'];
 };
 
-export type FetchLatestMessagesQueryVariables = Exact<{
-  channelId: Scalars['String'];
-}>;
-
-
-export type FetchLatestMessagesQuery = { __typename?: 'Queries', fetchLatestMessages?: Array<{ __typename?: 'Message', userId: string, text: string, datetime: any, id: string }> | null | undefined };
+export type MessageFragment = { __typename?: 'Message', userId: string, text: string, datetime: any, error?: number | null | undefined, status?: string | null | undefined, id: string };
 
 export type PostMessageMutationVariables = Exact<{
   channelId: Scalars['String'];
@@ -107,9 +104,23 @@ export type PostMessageMutationVariables = Exact<{
 }>;
 
 
-export type PostMessageMutation = { __typename?: 'Mutations', postMessage?: { __typename?: 'Message', userId: string, text: string, datetime: any, id: string } | null | undefined };
+export type PostMessageMutation = { __typename?: 'Mutations', postMessage?: { __typename?: 'Message', userId: string, text: string, datetime: any, error?: number | null | undefined, status?: string | null | undefined, id: string } | null | undefined };
 
-export type MessageFragment = { __typename?: 'Message', userId: string, text: string, datetime: any, id: string };
+export type FetchLatestMessagesQueryVariables = Exact<{
+  channelId: Scalars['String'];
+}>;
+
+
+export type FetchLatestMessagesQuery = { __typename?: 'Queries', fetchLatestMessages?: Array<{ __typename?: 'Message', userId: string, text: string, datetime: any, error?: number | null | undefined, status?: string | null | undefined, id: string }> | null | undefined };
+
+export type FetchMoreMessagesQueryVariables = Exact<{
+  channelId: Scalars['String'];
+  messageId: Scalars['String'];
+  old: Scalars['Boolean'];
+}>;
+
+
+export type FetchMoreMessagesQuery = { __typename?: 'Queries', fetchMoreMessages?: Array<{ __typename?: 'Message', userId: string, text: string, datetime: any, error?: number | null | undefined, status?: string | null | undefined, id: string }> | null | undefined };
 
 export const MessageFragmentDoc = gql`
     fragment Message on Message {
@@ -117,43 +128,10 @@ export const MessageFragmentDoc = gql`
   userId
   text
   datetime
+  error @client
+  status @client
 }
     `;
-export const FetchLatestMessagesDocument = gql`
-    query FetchLatestMessages($channelId: String!) {
-  fetchLatestMessages(channelId: $channelId) {
-    ...Message
-  }
-}
-    ${MessageFragmentDoc}`;
-
-/**
- * __useFetchLatestMessagesQuery__
- *
- * To run a query within a React component, call `useFetchLatestMessagesQuery` and pass it any options that fit your needs.
- * When your component renders, `useFetchLatestMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFetchLatestMessagesQuery({
- *   variables: {
- *      channelId: // value for 'channelId'
- *   },
- * });
- */
-export function useFetchLatestMessagesQuery(baseOptions: Apollo.QueryHookOptions<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>(FetchLatestMessagesDocument, options);
-      }
-export function useFetchLatestMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>(FetchLatestMessagesDocument, options);
-        }
-export type FetchLatestMessagesQueryHookResult = ReturnType<typeof useFetchLatestMessagesQuery>;
-export type FetchLatestMessagesLazyQueryHookResult = ReturnType<typeof useFetchLatestMessagesLazyQuery>;
-export type FetchLatestMessagesQueryResult = Apollo.QueryResult<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>;
 export const PostMessageDocument = gql`
     mutation PostMessage($channelId: String!, $text: String!, $userId: String!) {
   postMessage(channelId: $channelId, text: $text, userId: $userId) {
@@ -189,3 +167,75 @@ export function usePostMessageMutation(baseOptions?: Apollo.MutationHookOptions<
 export type PostMessageMutationHookResult = ReturnType<typeof usePostMessageMutation>;
 export type PostMessageMutationResult = Apollo.MutationResult<PostMessageMutation>;
 export type PostMessageMutationOptions = Apollo.BaseMutationOptions<PostMessageMutation, PostMessageMutationVariables>;
+export const FetchLatestMessagesDocument = gql`
+    query FetchLatestMessages($channelId: String!) {
+  fetchLatestMessages(channelId: $channelId) {
+    ...Message
+  }
+}
+    ${MessageFragmentDoc}`;
+
+/**
+ * __useFetchLatestMessagesQuery__
+ *
+ * To run a query within a React component, call `useFetchLatestMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchLatestMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchLatestMessagesQuery({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *   },
+ * });
+ */
+export function useFetchLatestMessagesQuery(baseOptions: Apollo.QueryHookOptions<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>(FetchLatestMessagesDocument, options);
+      }
+export function useFetchLatestMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>(FetchLatestMessagesDocument, options);
+        }
+export type FetchLatestMessagesQueryHookResult = ReturnType<typeof useFetchLatestMessagesQuery>;
+export type FetchLatestMessagesLazyQueryHookResult = ReturnType<typeof useFetchLatestMessagesLazyQuery>;
+export type FetchLatestMessagesQueryResult = Apollo.QueryResult<FetchLatestMessagesQuery, FetchLatestMessagesQueryVariables>;
+export const FetchMoreMessagesDocument = gql`
+    query FetchMoreMessages($channelId: String!, $messageId: String!, $old: Boolean!) {
+  fetchMoreMessages(channelId: $channelId, messageId: $messageId, old: $old) {
+    ...Message
+  }
+}
+    ${MessageFragmentDoc}`;
+
+/**
+ * __useFetchMoreMessagesQuery__
+ *
+ * To run a query within a React component, call `useFetchMoreMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchMoreMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchMoreMessagesQuery({
+ *   variables: {
+ *      channelId: // value for 'channelId'
+ *      messageId: // value for 'messageId'
+ *      old: // value for 'old'
+ *   },
+ * });
+ */
+export function useFetchMoreMessagesQuery(baseOptions: Apollo.QueryHookOptions<FetchMoreMessagesQuery, FetchMoreMessagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchMoreMessagesQuery, FetchMoreMessagesQueryVariables>(FetchMoreMessagesDocument, options);
+      }
+export function useFetchMoreMessagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchMoreMessagesQuery, FetchMoreMessagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchMoreMessagesQuery, FetchMoreMessagesQueryVariables>(FetchMoreMessagesDocument, options);
+        }
+export type FetchMoreMessagesQueryHookResult = ReturnType<typeof useFetchMoreMessagesQuery>;
+export type FetchMoreMessagesLazyQueryHookResult = ReturnType<typeof useFetchMoreMessagesLazyQuery>;
+export type FetchMoreMessagesQueryResult = Apollo.QueryResult<FetchMoreMessagesQuery, FetchMoreMessagesQueryVariables>;
