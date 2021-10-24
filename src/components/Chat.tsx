@@ -16,8 +16,12 @@ export const Chat: FC<ChatProps> = ({ name, picture, selected, onClick }) => {
     }
   );
   return (
-    <div className={classes} onClick={onClick}>
-      <img src={picture} className="w-12 h-12 rounded-full object-cover" />
+    <div className={classes} onClick={onClick} data-testid="channel">
+      <img
+        alt={name}
+        src={picture}
+        className="w-12 h-12 rounded-full object-cover"
+      />
       <div className="flex items-center ml-4 w-full border-t border-primary-300 h-16">
         <div className="mb-px text-white">{name}</div>
       </div>

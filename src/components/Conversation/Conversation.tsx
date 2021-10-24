@@ -73,10 +73,22 @@ export const Conversation: FC = () => {
     !error || !loading || fetchLatestMessages.length > 0;
 
   return (
-    <div className="flex flex-col w-full h-full border-l border-primary-300 conversation-container">
+    <div
+      className="flex flex-col w-full h-full border-l border-primary-300 conversation-container"
+      data-testid="conversation"
+    >
       <header className="flex items-center chat-header px-4">
-        <img src={channel.picture} className="w-10 h-10 rounded-full" />
-        <div className="ml-3 font-medium text-white">{channel.name}</div>
+        <img
+          alt={channel.name}
+          src={channel.picture}
+          className="w-10 h-10 rounded-full object-cover"
+        />
+        <div
+          className="ml-3 font-medium text-white"
+          data-testid="header-channel-name"
+        >
+          {channel.name}
+        </div>
       </header>
       {/* When there are 10 or more messages then we know there might be older messages */}
       {shouldShowLoadMoreButton && fetchLatestMessages.length >= 10 && (
