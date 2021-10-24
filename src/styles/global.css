@@ -16,6 +16,6 @@ body {
 }
 
 .conversation-container {
-  background: url(https://i.pinimg.com/originals/9f/1d/81/9f1d818dc9596a4d3d9f71ebbe2d15d3.jpg)
-    no-repeat scroll center center / cover;
+  background: url(/img/conversation-bg.jpg) no-repeat scroll center center /
+    cover;
 }
