@@ -56,7 +56,10 @@ export const Message: FC<MessageProps> = ({
       <div className={containerClasses}>
         <div className={classes}>
           <div className="p-3 pt-2.5">
-            <div className="font-bold text-xs text-yellow-400">
+            <div
+              className="font-bold text-xs"
+              style={{ color: generateColor("R") }}
+            >
               {user?.name}
             </div>
             <span className="text-white tracking-wide">{message.text}</span>

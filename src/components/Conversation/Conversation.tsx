@@ -8,9 +8,11 @@ import {
   useFetchLatestMessagesQuery,
   useFetchMoreMessagesLazyQuery,
 } from "../../graphql/types";
+import { usePostMessage } from "../../utils/usePostMessage";
 import { Loading } from "../Loading";
 import { LoadMoreButton } from "../LoadMoreButton";
 import { Message } from "../Message";
+import { MessageInput } from "./components/MessageInput";
 
 export const Conversation: FC = () => {
   const { channel, user } = useContext(ChatContext);
@@ -35,6 +37,8 @@ export const Conversation: FC = () => {
       client,
     },
   ] = useFetchMoreMessagesLazyQuery({ fetchPolicy: "network-only" });
+
+  const postMessage = usePostMessage();
 
   //Merge results from fetchMore to latestMessages cache
   useEffect(() => {
@@ -137,6 +141,12 @@ export const Conversation: FC = () => {
           }}
         />
       )}
+      <MessageInput
+        disabled={loading}
+        onSubmit={(text) => {
+          postMessage({ text });
+        }}
+      />
     </div>
   );
 };
