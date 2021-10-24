@@ -57,8 +57,10 @@ export const Message: FC<MessageProps> = ({
         <div className={classes}>
           <div className="p-3 pt-2.5">
             <div
-              className="font-bold text-xs"
-              style={{ color: generateColor("R") }}
+              className={classNames("font-bold text-xs", {
+                "text-green-200": !from,
+              })}
+              style={{ color: from ? generateColor(user!.name) : undefined }}
             >
               {user?.name}
             </div>
