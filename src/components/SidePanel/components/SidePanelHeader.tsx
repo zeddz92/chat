@@ -8,7 +8,7 @@ import { ChatContext } from "../../../contexts/ChatContext";
 
 export const SidePanelHeader = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { user, updateState } = useContext(ChatContext);
+  const { user, switchUser } = useContext(ChatContext);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -26,14 +26,14 @@ export const SidePanelHeader = () => {
           onClick={(e) => handleClick(e)}
         >
           <img src={user.picture} className="w-10 h-10 rounded-full" />
-          <div className="ml-3 mr-1 font-medium text-white">{user.name}</div>
-          {/* <KeyboardArrowDownIcon /> */}
+          <div className="ml-3 mr-3 font-medium text-white">{user.name}</div>
+          <KeyboardArrowDownIcon className="text-gray-300 pt-px flex" />
         </button>
       </div>
 
       <Tooltip title="Change users">
         <IconButton>
-          <HelpIcon className="text-gray-400" />
+          <HelpIcon className="text-gray-300" />
         </IconButton>
       </Tooltip>
 
@@ -41,19 +41,18 @@ export const SidePanelHeader = () => {
         id="program-menu"
         anchorEl={anchorEl}
         variant="menu"
-        PopoverClasses={{ paper: "w-auto max-h-96" }}
+        PopoverClasses={{ paper: "w-32 max-h-96" }}
         className="text-xl"
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        onClick={handleClose}
       >
         {users.map(({ id, name }) => (
           <MenuItem
             key={id}
-            selected={id == user.id}
-            onClick={() =>
-              updateState({ user: users.find((user) => user.id === id) })
-            }
+            selected={id === user.id}
+            onClick={() => switchUser(id)}
           >
             <span>{name}</span>
           </MenuItem>
