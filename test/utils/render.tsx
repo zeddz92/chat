@@ -5,25 +5,29 @@ import React from "react";
 import { UIDReset } from "react-uid";
 
 import { ChatProvider } from "../../src/contexts/ChatContext";
+import { typePolicies } from "../../src/graphql/apolloClient";
 
 interface Options {
   mocks?: ReadonlyArray<MockedResponse>;
+  cache?: InMemoryCache;
 }
 
 export const render = (
   ui: React.ReactElement,
-  { mocks = [] }: Options = {}
+  {
+    mocks = [],
+    cache = new InMemoryCache({
+      addTypename: false,
+      typePolicies,
+    }),
+  }: Options = {}
 ) => {
-  const apolloCache = new InMemoryCache({
-    addTypename: false,
-  });
-
   return renderNode(
     <MockedProvider
       mocks={mocks}
       defaultOptions={{ mutate: { errorPolicy: "all" } }}
       addTypename={false}
-      cache={apolloCache.restore({})}
+      cache={cache}
     >
       <ChatProvider>
         <UIDReset>{ui}</UIDReset>

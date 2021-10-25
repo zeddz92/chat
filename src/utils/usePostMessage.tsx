@@ -18,9 +18,9 @@ interface Props {
 export const usePostMessage = () => {
   const { user, channel } = useContext(ChatContext);
 
-  const [postMessage] = usePostMessageMutation();
+  const [postMessageMutation, mutationResult] = usePostMessageMutation();
 
-  return ({ text, id }: Props) => {
+  const postMessage = ({ text, id }: Props) => {
     const sendDate = DateTime.now().toISO();
 
     const defaultMessage: MessageFragment = {
@@ -32,7 +32,7 @@ export const usePostMessage = () => {
       datetime: sendDate,
     };
 
-    postMessage({
+    postMessageMutation({
       variables: {
         userId: user.id,
         text: text,
@@ -92,4 +92,6 @@ export const usePostMessage = () => {
       },
     });
   };
+
+  return { postMessage, ...mutationResult };
 };

@@ -28,10 +28,12 @@ export const MessageInput: FC<MessageInputProps> = ({ onSubmit, disabled }) => {
   return (
     <div className="flex items-center w-full bg-gray-800 py-3 px-6">
       <img
+        alt={user.name}
         src={user.picture}
         className="w-11 h-11 rounded-full mr-4 flex-shrink-0 object-cover"
       />
       <textarea
+        data-testid="message-input"
         disabled={disabled}
         rows={1}
         autoFocus={true}
