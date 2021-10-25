@@ -11,12 +11,41 @@ describe("Chat page", () => {
   });
 
   test("change channel on click", async () => {
-    const { getAllByTestId, getByTestId } = render(<Home />);
-    const channel = getAllByTestId("channel");
+    const { getByText, getByTestId } = render(<Home />);
 
-    await waitFor(() => fireEvent.click(channel[1]));
+    await waitFor(() => fireEvent.click(getByText("Technology Channel")));
+
     expect(getByTestId("header-channel-name")).toHaveTextContent(
       "Technology Channel"
     );
+  });
+
+  test("clear message input on channel change", async () => {
+    const { getByTestId, getByText } = render(<Home />);
+
+    const messageInput = getByTestId("message-input");
+
+    fireEvent.change(messageInput, {
+      target: { value: "Hello World" },
+    });
+
+    await waitFor(() => fireEvent.click(getByText("Technology Channel")));
+    expect(messageInput).toHaveTextContent("");
+  });
+
+  test("keep a draft of the message written on channel", async () => {
+    const { getByTestId, getByText } = render(<Home />);
+
+    const messageInput = getByTestId("message-input");
+
+    fireEvent.change(messageInput, {
+      target: { value: "Hello World" },
+    });
+
+    await waitFor(() => fireEvent.click(getByText("Technology Channel")));
+    expect(messageInput).toHaveTextContent("");
+
+    await waitFor(() => fireEvent.click(getByText("General Channel")));
+    expect(messageInput).toHaveTextContent("Hello World");
   });
 });
