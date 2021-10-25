@@ -5,7 +5,7 @@
     "build": "next build",
     "start": "next start",
     "gql:types": "graphql-codegen --config codegen.yml",
-    "test": "jest --watch"
+    "test": "jest"
   },
   "dependencies": {
     "@apollo/client": "^3.4.16",

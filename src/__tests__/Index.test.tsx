@@ -1,7 +1,7 @@
 import { fireEvent, waitFor } from "@testing-library/react";
 
-import Home from "..";
-import { render } from "../../../test/utils/render";
+import Home from "../pages";
+import { render } from "../../test/utils/render";
 
 describe("Chat page", () => {
   test("renders", () => {
