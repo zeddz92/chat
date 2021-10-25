@@ -16,6 +16,12 @@ export type Scalars = {
   OffsetDateTime: any;
 };
 
+export enum ChannelId {
+  General = 'General',
+  Lgtm = 'LGTM',
+  Technology = 'Technology'
+}
+
 export type Message = {
   __typename?: 'Message';
   datetime: Scalars['OffsetDateTime'];
@@ -26,8 +32,26 @@ export type Message = {
   userId: Scalars['String'];
 };
 
+export type MessageEnum = {
+  __typename?: 'MessageEnum';
+  datetime: Scalars['OffsetDateTime'];
+  messageId: Scalars['String'];
+  text: Scalars['String'];
+  userId: UserId;
+};
+
 export type Mutations = {
   __typename?: 'Mutations';
+  /**
+   *
+   *   Post `messages`. return posted datetime when it succeeded
+   *
+   *   Code|Error
+   *   ---|---
+   *   500|`Couldn't save message, please retry.`
+   *
+   */
+  MessagePost?: Maybe<MessageEnum>;
   /**
    *
    *   Post `messages`. return posted datetime when it succeeded
@@ -45,6 +69,13 @@ export type Mutations = {
 };
 
 
+export type MutationsMessagePostArgs = {
+  channelId: ChannelId;
+  text: Scalars['String'];
+  userId: UserId;
+};
+
+
 export type MutationsPostMessageArgs = {
   channelId: Scalars['String'];
   text: Scalars['String'];
@@ -53,6 +84,31 @@ export type MutationsPostMessageArgs = {
 
 export type Queries = {
   __typename?: 'Queries';
+  /**
+   *
+   *   get latest `messages`
+   *
+   *   - `message` length is at most 10
+   *
+   *   Code|Error
+   *   ---|---
+   *
+   */
+  MessagesFetchLatest?: Maybe<Array<MessageEnum>>;
+  /**
+   *
+   *   Get more `messages`.
+   *
+   *   - if `old` = true, you can fetch older messages than messageId
+   *   - if `old` = false, you can fetch newer messages than messageId
+   *   - `message` length is at most 10
+   *
+   *   Code|Error
+   *   ---|---
+   *   400|`Message not found`
+   *
+   */
+  MessagesFetchMore?: Maybe<Array<MessageEnum>>;
   /**
    *
    *   get latest `messages`
@@ -84,6 +140,18 @@ export type Queries = {
 };
 
 
+export type QueriesMessagesFetchLatestArgs = {
+  channelId: ChannelId;
+};
+
+
+export type QueriesMessagesFetchMoreArgs = {
+  channelId: ChannelId;
+  messageId: Scalars['String'];
+  old: Scalars['Boolean'];
+};
+
+
 export type QueriesFetchLatestMessagesArgs = {
   channelId: Scalars['String'];
 };
@@ -94,6 +162,12 @@ export type QueriesFetchMoreMessagesArgs = {
   messageId: Scalars['String'];
   old: Scalars['Boolean'];
 };
+
+export enum UserId {
+  Joyse = 'Joyse',
+  Russell = 'Russell',
+  Sam = 'Sam'
+}
 
 export type MessageFragment = { __typename?: 'Message', userId: string, text: string, datetime: any, error?: number | null | undefined, status?: string | null | undefined, id: string };
 
