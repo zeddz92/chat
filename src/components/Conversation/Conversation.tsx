@@ -54,11 +54,12 @@ export const Conversation: FC = () => {
         })?.fetchLatestMessages || [];
 
       let messages = [];
+      const moreMessagesResult = [...moreMessagesData.fetchMoreMessages];
 
       if (moreMessagesVariables?.old) {
-        messages = [...data, ...moreMessagesData.fetchMoreMessages];
+        messages = [...data, ...moreMessagesResult];
       } else {
-        messages = [...moreMessagesData.fetchMoreMessages, ...data];
+        messages = [...moreMessagesResult.reverse(), ...data];
       }
 
       client.cache.writeQuery({
@@ -78,8 +79,7 @@ export const Conversation: FC = () => {
 
   const fetchLatestMessages = data?.fetchLatestMessages || [];
 
-  const shouldShowLoadMoreButton =
-    !error || !loading || fetchLatestMessages.length > 0;
+  const shouldShowLoadMoreButton = !error && !loading;
 
   return (
     <div
