@@ -42,7 +42,6 @@ export const ChatProvider: FC = ({ children }) => {
 
   const updateDraft = (text = "") => {
     const { channel } = state;
-    console.log({ channel: channel.id, text });
     setState({ ...state, drafts: { ...state.drafts, [channel.id]: text } });
   };
 
