@@ -25,7 +25,11 @@ export const SidePanelHeader = () => {
           className="w-inherit flex items-center px-4"
           onClick={(e) => handleClick(e)}
         >
-          <img src={user.picture} className="w-10 h-10 rounded-full" />
+          <img
+            alt={user.name}
+            src={user.picture}
+            className="w-10 h-10 rounded-full"
+          />
           <div className="ml-3 mr-3 font-medium text-white">{user.name}</div>
           <KeyboardArrowDownIcon className="text-gray-300 pt-px flex" />
         </button>
