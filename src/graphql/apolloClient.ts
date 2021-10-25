@@ -2,18 +2,51 @@ import {
   ApolloClient,
   HttpLink,
   InMemoryCache,
+  from,
   NormalizedCacheObject,
 } from "@apollo/client";
 import { useMemo } from "react";
+import { onError } from "@apollo/client/link/error";
+
+import Router from "next/router";
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
+export const typePolicies = {
+  Message: {
+    fields: {
+      error: {
+        read(error = "") {
+          return error;
+        },
+      },
+      status: {
+        read(status = "DEFAULT") {
+          return status;
+        },
+      },
+    },
+  },
+};
+
 const createApolloClient = () => {
+  const httpLink = new HttpLink({
+    uri: "https://angular-test-backend-yc4c5cvnnq-an.a.run.app/graphql",
+  });
+
+  const errorLink = onError(({ graphQLErrors, networkError }) => {
+    if (networkError) {
+      Router.replace(
+        "/?networkError=A network error ocurred. Try again later",
+        {},
+        { shallow: true }
+      );
+    }
+  });
+
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    link: new HttpLink({
-      uri: "https://angular-test-backend-yc4c5cvnnq-an.a.run.app/graphql",
-    }),
+    link: from([errorLink, httpLink]),
     defaultOptions: {
       mutate: {
         // Prevent apollo from throwing when there is an error, so we can catch it
@@ -21,23 +54,7 @@ const createApolloClient = () => {
       },
     },
     cache: new InMemoryCache({
-      typePolicies: {
-        Message: {
-          keyFields: ["messageId"],
-          fields: {
-            error: {
-              read(error = "") {
-                return error;
-              },
-            },
-            status: {
-              read(status = "DEFAULT") {
-                return status;
-              },
-            },
-          },
-        },
-      },
+      typePolicies,
     }),
   });
 };
@@ -61,8 +78,3 @@ export const useApollo = (initialState?: NormalizedCacheObject) => {
   const store = useMemo(() => initApollo(initialState), [initialState]);
   return store;
 };
-
-// export const apolloClient = new ApolloClient({
-//   uri: "https://angular-test-backend-yc4c5cvnnq-an.a.run.app/graphql",
-//   cache: new InMemoryCache(),
-// });
