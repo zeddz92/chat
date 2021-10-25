@@ -4,7 +4,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start -p $PORT",
-    "heroku-postbuild": "npm run build",
     "gql:types": "graphql-codegen --config codegen.yml",
     "test": "jest"
   },
@@ -17,7 +16,7 @@
     "classnames": "^2.3.1",
     "graphql": "^15.6.1",
     "luxon": "^2.0.2",
-    "next": "latest",
+    "next": "^11.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-uid": "^2.3.1"
