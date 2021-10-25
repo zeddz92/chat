@@ -1,14 +1,23 @@
 import Head from "next/head";
 
+import { Container } from "../components/Container";
+import { Conversation } from "../components/Conversation";
+import { SidePanel } from "../components/SidePanel/SidePanel";
+
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen py-2">
+    <div className="h-screen py-6" data-testid="chat">
       <Head>
-        <title>Create Next App</title>
+        <title>Messenger</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="w-full justify-center px-20 h-screen"></main>
+      <Container>
+        <div className="flex h-full">
+          <SidePanel />
+          <Conversation />
+        </div>
+      </Container>
     </div>
   );
 }

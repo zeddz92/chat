@@ -1,0 +1,7 @@
+#import "../../fragments/Message.gql"
+
+mutation PostMessage($channelId: String!, $text: String!, $userId: String!) {
+  postMessage(channelId: $channelId, text: $text, userId: $userId) {
+    ...Message
+  }
+}

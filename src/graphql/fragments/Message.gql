@@ -1,0 +1,8 @@
+fragment Message on Message {
+  id: messageId
+  userId
+  text
+  datetime
+  error @client
+  status @client
+}
