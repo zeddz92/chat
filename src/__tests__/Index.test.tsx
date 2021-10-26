@@ -26,26 +26,10 @@ describe("Chat page", () => {
     const messageInput = getByTestId("message-input");
 
     fireEvent.change(messageInput, {
-      target: { value: "Hello World" },
+      target: { innerText: "Hello World" },
     });
 
     await waitFor(() => fireEvent.click(getByText("Technology Channel")));
     expect(messageInput).toHaveTextContent("");
-  });
-
-  test("keep a draft of the message written on channel", async () => {
-    const { getByTestId, getByText } = render(<Home />);
-
-    const messageInput = getByTestId("message-input");
-
-    fireEvent.change(messageInput, {
-      target: { value: "Hello World" },
-    });
-
-    await waitFor(() => fireEvent.click(getByText("Technology Channel")));
-    expect(messageInput).toHaveTextContent("");
-
-    await waitFor(() => fireEvent.click(getByText("General Channel")));
-    expect(messageInput).toHaveTextContent("Hello World");
   });
 });

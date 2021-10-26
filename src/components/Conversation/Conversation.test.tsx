@@ -132,10 +132,12 @@ describe("Conversation", () => {
         })
       );
 
-      const messageInput = getByTestId("message-input");
+      //Wait for messages to be loaded
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 0)));
+      const messageInput = await waitFor(() => getByTestId("message-input"));
 
       fireEvent.change(messageInput, {
-        target: { value: "Hello World" },
+        target: { innerText: "Hello World" },
       });
 
       await waitFor(() =>
@@ -147,6 +149,7 @@ describe("Conversation", () => {
       );
 
       const updatedCache = cache.extract();
+
       const newMessageId = postMessageResult.id;
 
       const message = updatedCache[`Message:${newMessageId}`];
@@ -172,10 +175,12 @@ describe("Conversation", () => {
         })
       );
 
-      const messageInput = getByTestId("message-input");
+      //Wait for messages to be loaded
+      await waitFor(() => new Promise((resolve) => setTimeout(resolve, 0)));
+      const messageInput = await waitFor(() => getByTestId("message-input"));
 
       fireEvent.change(messageInput, {
-        target: { value: "Hello World" },
+        target: { innerText: "Hello World" },
       });
 
       await waitFor(() =>

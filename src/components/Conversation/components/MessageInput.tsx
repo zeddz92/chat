@@ -31,6 +31,7 @@ export const MessageInput: FC<MessageInputProps> = ({ onSubmit, disabled }) => {
       />
 
       <div
+        data-testid="message-input"
         ref={inputRef}
         role="textbox"
         contentEditable
