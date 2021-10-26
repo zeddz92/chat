@@ -66,7 +66,9 @@ export const Message: FC<MessageProps> = ({
             >
               {user?.name}
             </div>
-            <span className="text-white tracking-wide">{message.text}</span>
+            <span className="text-white tracking-wide whitespace-pre-wrap">
+              {message.text}
+            </span>
           </div>
           <div className="flex items-center self-end pr-2 pb-1">
             <div
