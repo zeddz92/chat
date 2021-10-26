@@ -2,7 +2,9 @@
 
 This is the front end take home test for AnyMind of a chat application.
 
-<img src="images/app.png" height="400" >
+## Live Demo
+
+https://am-chat.herokuapp.com/
 
 ## Getting Started
 
