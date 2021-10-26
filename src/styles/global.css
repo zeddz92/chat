@@ -18,3 +18,25 @@ body {
   background: url(/img/conversation-bg.jpg) no-repeat scroll center center /
     cover;
 }
+
+[contentEditable="true"]:empty:before {
+  content: attr(placeholder);
+  @apply text-gray-300;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  @apply w-2;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary-200 bg-opacity-40;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
