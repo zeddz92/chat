@@ -1,7 +1,7 @@
+import SendIcon from "@mui/icons-material/Send";
 import React, { FC, useContext, useRef } from "react";
 
 import { ChatContext } from "../../../contexts/ChatContext";
-import SendIcon from "@mui/icons-material/Send";
 
 interface MessageInputProps {
   onSubmit: (text: string) => void;
