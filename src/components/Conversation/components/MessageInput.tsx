@@ -1,6 +1,7 @@
-import React, { FC, useContext, useEffect, useState } from "react";
+import React, { FC, useContext, useRef } from "react";
 
 import { ChatContext } from "../../../contexts/ChatContext";
+import SendIcon from "@mui/icons-material/Send";
 
 interface MessageInputProps {
   onSubmit: (text: string) => void;
@@ -8,60 +9,61 @@ interface MessageInputProps {
 }
 
 export const MessageInput: FC<MessageInputProps> = ({ onSubmit, disabled }) => {
-  const [text, setText] = useState("");
-
   const { user, channel, drafts, updateDraft } = useContext(ChatContext);
 
-  useEffect(() => {
-    if (drafts[channel.id]) {
-      setText(drafts[channel.id]);
-    } else {
-      setText("");
-    }
-  }, [channel]);
+  const inputRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (text) {
-      updateDraft(text);
+  const handleSubmit = () => {
+    const text = inputRef.current?.innerText || "";
+    if (text.trim() !== "") {
+      onSubmit(text.trim());
+      inputRef.current!.innerText = "";
+      updateDraft("");
     }
-  }, [text]);
+  };
+
   return (
     <div className="flex items-center w-full bg-gray-800 py-3 px-6">
       <img
         alt={user.name}
         src={user.picture}
-        className="w-11 h-11 rounded-full mr-4 flex-shrink-0 object-cover"
+        className="h-11 rounded-full mr-4 flex-shrink-0 object-cover self-end py-1"
       />
-      <textarea
-        data-testid="message-input"
-        disabled={disabled}
-        rows={1}
-        autoFocus={true}
-        name="message"
-        autoComplete="off"
-        className="border border-gray-400 rounded-full w-full py-2.5 px-5 resize-none overflow-hidden"
+
+      <div
+        ref={inputRef}
+        role="textbox"
+        contentEditable
+        spellCheck="true"
+        suppressContentEditableWarning
         placeholder={`Type a message as ${user.name}`}
-        value={text}
-        onChange={(e) => {
-          setText(e.currentTarget.value);
+        className="text-white rounded-3xl bg-primary-400 max-h-32 border border-primary-400 w-full py-2 px-5 outline-none cursor-text overflow-y-auto whitespace-pre-wrap"
+        onBlur={(e) => {
+          updateDraft(e.currentTarget.innerText);
         }}
         onKeyDown={(e) => {
-          // Remove trailing spaces for the text
-          const text = e.currentTarget.value.trim();
-          const isEmptyText = text === "";
-          const isEnterKeyPressed = e.key === "Enter";
+          const text = e.currentTarget.innerText;
+          const isEnterKeyPressed = e.key === "Enter" && !e.shiftKey;
 
-          if ((e.key === " " && isEmptyText) || isEnterKeyPressed) {
-            e.preventDefault();
+          if (disabled || ((e.key === " " || e.key === "Enter") && !text)) {
+            return e.preventDefault();
           }
-          //TODO: pressing shift key and enter should resize textarea
-          if (isEnterKeyPressed && !isEmptyText && !e.shiftKey) {
-            onSubmit(text);
-            setText("");
-            updateDraft("");
+
+          if (isEnterKeyPressed && text) {
+            e.preventDefault();
+            handleSubmit();
           }
         }}
-      />
+      >
+        {drafts[channel.id]}
+      </div>
+      <button
+        onClick={() => handleSubmit()}
+        disabled={disabled}
+        className="text-2xl ml-2 flex p-2.5 pr-0 self-end"
+      >
+        <SendIcon className="text-primary-100" fontSize="inherit" />
+      </button>
     </div>
   );
 };
