@@ -22,7 +22,7 @@ export const Message: FC<MessageProps> = ({
 }) => {
   const { postMessage, loading } = usePostMessage();
 
-  const containerClasses = classNames("max-w-1/2 flex my-1.5 z-10", {
+  const containerClasses = classNames("max-w-message flex my-1.5 z-10", {
     "self-start flex-row-reverse": from,
     "self-end": !from,
   });
@@ -66,7 +66,7 @@ export const Message: FC<MessageProps> = ({
             >
               {user?.name}
             </div>
-            <span className="text-white tracking-wide whitespace-pre-wrap">
+            <span className="text-white tracking-wide whitespace-pre-wrap break-word">
               {message.text}
             </span>
           </div>

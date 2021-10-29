@@ -24,6 +24,7 @@ module.exports = {
       maxWidth: {
         sidePanel: "418px",
         desktop: "1396px",
+        message: "71%",
         "1/2": "50%",
       },
     },
