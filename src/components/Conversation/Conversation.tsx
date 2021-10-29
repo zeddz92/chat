@@ -154,7 +154,7 @@ export const Conversation: FC = () => {
           />
         ))}
       </div>
-      {shouldShowLoadMoreButton && (
+      {shouldShowLoadMoreButton && fetchLatestMessages.length > 0 && (
         <LoadMoreButton
           error={
             !moreMessagesVariables?.old ? fetchMoreMessagesError : undefined
