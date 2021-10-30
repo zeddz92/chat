@@ -10,6 +10,7 @@ import {
   useFetchMoreMessagesLazyQuery,
 } from "../../graphql/types";
 import { usePostMessage } from "../../utils/usePostMessage";
+import { ChannelsMenu } from "../ChannelsMenu";
 import { Loading } from "../Loading";
 import { LoadMoreButton } from "../LoadMoreButton";
 import { Message } from "../Message";
@@ -87,17 +88,7 @@ export const Conversation: FC = () => {
       data-testid="conversation"
     >
       <header className="flex items-center chat-header px-4">
-        <img
-          alt={channel.name}
-          src={channel.picture}
-          className="w-10 h-10 rounded-full object-cover"
-        />
-        <div
-          className="ml-3 font-medium text-white"
-          data-testid="header-channel-name"
-        >
-          {channel.name}
-        </div>
+        <ChannelsMenu />
       </header>
       {router?.query?.networkError && (
         <Alert
@@ -135,7 +126,7 @@ export const Conversation: FC = () => {
         />
       )}
 
-      <div className="inline-flex flex-1 px-8 py-4 overflow-y-auto relative flex-col-reverse">
+      <div className="inline-flex flex-1 px-4 md:px-8 py-4 overflow-y-auto relative flex-col-reverse">
         <div className="top-4 inset-x-8 absolute z-20">
           {error?.graphQLErrors[0] && (
             <Alert data-testid="conversation-graphql-error" severity="error">
