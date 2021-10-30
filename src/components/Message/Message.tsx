@@ -22,10 +22,13 @@ export const Message: FC<MessageProps> = ({
 }) => {
   const { postMessage, loading } = usePostMessage();
 
-  const containerClasses = classNames("max-w-message flex my-1.5 z-10", {
-    "self-start flex-row-reverse": from,
-    "self-end": !from,
-  });
+  const containerClasses = classNames(
+    "max-w-10/12 md:max-w-message flex my-1.5 z-10",
+    {
+      "self-start flex-row-reverse": from,
+      "self-end": !from,
+    }
+  );
   const classes = classNames("flex w-auto rounded-t-md text-sm bg-opacity-60", {
     "rounded-r-md bg-primary-400": from,
     "rounded-l-md bg-green-700": !from,

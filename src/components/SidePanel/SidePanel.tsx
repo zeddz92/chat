@@ -12,7 +12,7 @@ export const SidePanel = () => {
   const { channel, switchChannel } = useContext(ChatContext);
   return (
     <div
-      className="flex flex-col max-w-sidePanel w-full h-full bg-primary-700"
+      className="hidden md:flex flex-col max-w-sidePanel w-full h-full bg-primary-700"
       data-testid="side-panel"
     >
       <header className="flex items-center px-4 justify-between w-full chat-header">

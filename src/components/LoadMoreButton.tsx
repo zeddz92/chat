@@ -28,7 +28,7 @@ export const LoadMoreButton: FC<LoadMoreButtonProps> = ({
   return (
     <button
       disabled={disabled}
-      className="flex justify-center items-center cursor-pointer my-1 relative"
+      className="flex justify-center items-center cursor-pointer my-1 relative text-sm md:text-base"
       onClick={onClick}
       data-testid={`load-more-${direction}`}
     >

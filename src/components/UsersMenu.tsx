@@ -10,11 +10,13 @@ import { ChatContext } from "../contexts/ChatContext";
 interface UsersMenuProps {
   size?: "default" | "small";
   className?: string;
+  imgClasses?: string;
 }
 
 export const UsersMenu: FC<UsersMenuProps> = ({
   size = "default",
   className,
+  imgClasses,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { user, switchUser } = useContext(ChatContext);
@@ -35,17 +37,20 @@ export const UsersMenu: FC<UsersMenuProps> = ({
         className="w-inherit flex items-center"
         onClick={(e) => handleClick(e)}
       >
-        <img alt={user.name} src={user.picture} className="h-11 rounded-full" />
+        <img
+          alt={user.name}
+          src={user.picture}
+          className={classNames("h-11 rounded-full", imgClasses)}
+        />
         {size !== "small" && (
           <>
-            <div className="ml-3 mr-3 font-medium text-white">{user.name}</div>
+            <div className="mx-3 font-medium text-white">{user.name}</div>
             <KeyboardArrowDownIcon className="text-gray-300 pt-px flex" />
           </>
         )}
       </button>
 
       <Menu
-        id="program-menu"
         anchorEl={anchorEl}
         variant="menu"
         PopoverClasses={{ paper: "w-48 my-4 max-h-96" }}
