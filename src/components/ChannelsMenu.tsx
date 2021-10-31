@@ -44,7 +44,7 @@ export const ChannelsMenu: FC<ChannelsMenuProps> = ({ className }) => {
           {channel.name}
         </div>
 
-        <KeyboardArrowDownIcon className="text-gray-300 pt-px flex md:hidden" />
+        <KeyboardArrowDownIcon className="text-gray-300 pt-px md:hidden flex" />
       </button>
 
       <Menu
