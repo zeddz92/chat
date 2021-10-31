@@ -28,8 +28,6 @@ export const Conversation: FC = () => {
     refetch: refetchLatestMessages,
     error,
   } = useFetchLatestMessagesQuery({
-    // Ignore cache on refetch
-    nextFetchPolicy: "network-only",
     variables: {
       channelId: channel.id,
     },
