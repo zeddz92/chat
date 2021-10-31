@@ -25,8 +25,11 @@ export const Conversation: FC = () => {
     data,
     variables: fetchLatestMessagesVariables,
     loading,
+    refetch: refetchLatestMessages,
     error,
   } = useFetchLatestMessagesQuery({
+    // Ignore cache on refetch
+    nextFetchPolicy: "network-only",
     variables: {
       channelId: channel.id,
     },
@@ -145,14 +148,16 @@ export const Conversation: FC = () => {
           />
         ))}
       </div>
-      {shouldShowLoadMoreButton && fetchLatestMessages.length > 0 && (
+      {shouldShowLoadMoreButton && (
         <LoadMoreButton
           error={
             !moreMessagesVariables?.old ? fetchMoreMessagesError : undefined
           }
-          disabled={isFetchingMoreMessages && !moreMessagesVariables?.old}
+          disabled={
+            (isFetchingMoreMessages && !moreMessagesVariables?.old) || loading
+          }
           onClick={() => {
-            if (data?.fetchLatestMessages) {
+            if (data?.fetchLatestMessages?.length) {
               const firstMessageId = data.fetchLatestMessages[0].id;
 
               fetchMoreMessages({
@@ -162,6 +167,8 @@ export const Conversation: FC = () => {
                   messageId: firstMessageId,
                 },
               });
+            } else {
+              refetchLatestMessages();
             }
           }}
         />
