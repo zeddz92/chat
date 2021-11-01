@@ -7,6 +7,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      gridTemplateColumns: {
+        flow: "repeat(auto-fill, minmax(min(44px, 100%), 1fr))",
+      },
       colors: {
         primary: {
           50: "#e2e4e5",
