@@ -1,72 +1,94 @@
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import React, { useEffect, useState } from "react";
-import MoodIcon from "@mui/icons-material/Mood";
-import PetsIcon from "@mui/icons-material/Pets";
-import FreeBreakfastIcon from "@mui/icons-material/FreeBreakfast";
-import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import EmojiObjectsOutlinedIcon from "@mui/icons-material/EmojiObjectsOutlined";
-import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
-import OutlinedFlagTwoToneIcon from "@mui/icons-material/OutlinedFlagTwoTone";
+import React, { useEffect, useState, FC, useRef } from "react";
+
 import { BaseEmoji } from "unicode-emoji";
 import { categories } from "./sources/emojis";
 import { useLazyUnicodeEmoji } from "./useLazyUnicodeEmoji";
 import { Tabs as CustomTabs } from "./components/Tabs";
+import classNames from "classnames";
+import { CSSTransition, Transition } from "react-transition-group";
 
 // import emojis from "./sources/emojis";
 
-interface Props {}
+interface EmojiPickerProps {
+  variant?: "fullWidth" | "default";
+}
 
-export const EmojiPicker = (props: Props) => {
+export const EmojiPicker: FC<EmojiPickerProps> = ({ variant = "default" }) => {
   const { baseEmojis, groupedEmojis } = useLazyUnicodeEmoji();
+  const ref = useRef<HTMLDivElement>(null);
+  const [showInput, setShowInput] = useState(true);
 
   const [resultEmojis, setResultEmojis] = useState<BaseEmoji[] | undefined>();
 
   return (
     <div
-      className="text-white w-full  flex flex-col bg-primary-600"
+      className="text-white w-full flex flex-col bg-primary-600"
       style={{ height: 300 }}
     >
-      <CustomTabs isRendered={!!groupedEmojis} />
-      {/* <Tabs
-        value={1}
-        textColor="inherit"
-        aria-label="icon tabs example"
-        className="text-white mb-2"
+      <CustomTabs
+        scrollContentRef={ref}
+        variant={variant}
+        isRendered={!!groupedEmojis}
+      />
+
+      <div
+        className="overflow-y-auto w-full h-full  relative"
+        id="emoji-container"
+        ref={ref}
+        onWheel={(e) => {
+          const inThreshold = e.currentTarget.scrollTop % 15 === 0;
+          if (!inThreshold) {
+            return;
+          }
+
+          if (e.nativeEvent.deltaY > 0) {
+            setShowInput(false);
+          } else {
+            setShowInput(true);
+          }
+        }}
       >
-        <Tab icon={<MoodIcon />} aria-label="phone" />
-        <Tab icon={<PetsIcon />} aria-label="favorite" />
-        <Tab icon={<FreeBreakfastIcon />} aria-label="person" />
-        <Tab icon={<SportsSoccerIcon />} aria-label="person" />
-        <Tab icon={<DirectionsCarIcon />} aria-label="person" />
-        <Tab icon={<EmojiObjectsOutlinedIcon />} aria-label="person" />
-        <Tab icon={<TagOutlinedIcon />} aria-label="person" />
-        <Tab icon={<OutlinedFlagTwoToneIcon />} aria-label="person" />
-      </Tabs> */}
-      <div className="overflow-y-auto w-full h-full px-3" id="emoji-container">
-        <div className="pr-4">
-          <input
-            type="search"
-            className="w-full rounded px-3 py-2 bg-primary-400 outline-none"
-            placeholder="Search Emoji"
-            onChange={(e) => {
-              const value = e.currentTarget.value.toLowerCase();
-              if (value) {
-                setResultEmojis(
-                  baseEmojis?.filter(
-                    (emoji) =>
-                      emoji.description.toLocaleLowerCase().includes(value) ||
-                      emoji.keywords.includes(value)
-                  )
-                );
-              } else {
-                setResultEmojis(undefined);
-              }
+        {/* {
+                "h-0": !showInput,
+                "h-auto": showInput,
+              } */}
+        <span className="block pr-2 sticky top-0 z-20 bg-primary-600 ease-animation">
+          <CSSTransition
+            in={showInput}
+            timeout={{ enter: 1800, exit: 1800 }}
+            classNames="slide"
+            onExit={() => {
+              console.log("on exit");
             }}
-          />
-        </div>
-        <div className="w-full relative">
+            mountOnEnter={true}
+            unmountOnExit={true}
+          >
+            <div className="px-3 py-1.5">
+              <input
+                type="search"
+                className="w-full rounded px-3 py-2 bg-primary-400 outline-none"
+                placeholder="Search Emoji"
+                onChange={(e) => {
+                  const value = e.currentTarget.value.toLowerCase();
+                  if (value) {
+                    setResultEmojis(
+                      baseEmojis?.filter(
+                        (emoji) =>
+                          emoji.description
+                            .toLocaleLowerCase()
+                            .includes(value) || emoji.keywords.includes(value)
+                      )
+                    );
+                  } else {
+                    setResultEmojis(undefined);
+                  }
+                }}
+              />
+            </div>
+          </CSSTransition>
+        </span>
+
+        <div className="w-full relative px-3">
           {resultEmojis && (
             <div className="grid grid-cols-flow gap-y-3 my-4 pr-4">
               {resultEmojis.map(({ emoji }) => (
@@ -89,10 +111,10 @@ export const EmojiPicker = (props: Props) => {
           {!resultEmojis &&
             groupedEmojis &&
             categories.map(({ id, name }) => (
-              <div className="my-4 relative h-full" key={id}>
+              <div className="my-4 relative" key={id}>
                 <div
                   id={id}
-                  className="emoji-category text-primary-200 text-sm mb-1.5"
+                  className="emoji-category text-primary-200 text-sm mb-2"
                 >
                   {name}
                 </div>

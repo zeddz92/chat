@@ -9,13 +9,13 @@
  **  ::Resolves when the scrolling ends
  *
  */
-export function smoothScroll(elem, options) {
+export function smoothScroll(elem: Element, options: ScrollIntoViewOptions) {
   return new Promise((resolve) => {
     if (!(elem instanceof Element)) {
       throw new TypeError("Argument 1 must be an Element");
     }
     let same = 0; // a counter
-    let lastPos = null; // last known Y position
+    let lastPos: number | null = null; // last known Y position
     // pass the user defined options along with our default
     const scrollOptions = Object.assign({ behavior: "smooth" }, options);
 
@@ -41,7 +41,7 @@ export function smoothScroll(elem, options) {
            * }
            * return;
            */
-          return resolve(); // we've come to an halt
+          return resolve(undefined); // we've come to an halt
         }
       } else {
         same = 0; // reset our counter
