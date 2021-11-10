@@ -29,7 +29,9 @@ export const MessageInput: FC<MessageInputProps> = ({ onSubmit, disabled }) => {
 
   return (
     <div>
-      <EmojiPicker variant="fullWidth" />
+      <div style={{ height: 300 }}>
+        <EmojiPicker variant="fullWidth" />
+      </div>
       <div className="flex items-center w-full bg-gray-800 py-3 px-6">
         <UsersMenu
           className="self-end pb-1 mr-3 md:mr-4 md:pointer-events-none "

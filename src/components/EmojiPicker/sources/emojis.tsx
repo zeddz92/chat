@@ -1,12 +1,17 @@
 import * as unicodeEmoji from "unicode-emoji";
+import React from "react"
 
 export const categories: {
   id: unicodeEmoji.Category;
   name: string;
+  icon?: any;
 }[] = [
   {
     id: "face-emotion",
     name: "Smileys & People",
+    icon: function() => {
+      return <></>,
+    }
   },
   {
     id: "animals-nature",

@@ -1,12 +1,17 @@
 module.exports = {
   mode: "jit",
+  darkMode: "class",
   purge: [
     "./src/pages/**/*.{js,ts,jsx,tsx}",
     "./src/components/**/*.{js,ts,jsx,tsx}",
   ],
-  darkMode: false, // or 'media' or 'class'
+
   theme: {
     extend: {
+      inset: {
+        "-12.5": "-3.25rem",
+        "-15": "-3.875rem",
+      },
       gridTemplateColumns: {
         flow: "repeat(auto-fill, minmax(min(44px, 100%), 1fr))",
       },
@@ -15,14 +20,25 @@ module.exports = {
           50: "#e2e4e5",
           100: "#b7babe",
           200: "#878d92",
-          300: "#565f66",
-          400: "#323c46",
-          500: "#0e1a25",
+          300: "#626669",
+          400: "#262D31",
+          500: "#1e2428",
           600: "#0c1721",
           700: "#0a131b",
           800: "#080f16",
           900: "#04080d",
         },
+        secondary: {
+          100: "rgba(241,241,242,0.45)",
+          200: "rgba(241,241,242,0.63)",
+        },
+      },
+      padding: {
+        12.5: "3.25rem",
+        15: "3.875rem",
+      },
+      maxHeight: {
+        12.5: "3.25rem",
       },
       maxWidth: {
         sidePanel: "418px",

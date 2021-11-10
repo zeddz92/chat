@@ -1,21 +1,31 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BaseEmoji, GroupedBy } from "unicode-emoji";
+
+import { EMOJIS_VERSION, LOCAL_STORAGE_RECENT } from "./constants";
+import { getItem } from "./utils/useLocalStorage";
 
 export const useLazyUnicodeEmoji = () => {
   const [groupedEmojis, setGroupedEmojis] =
-    useState<Record<GroupedBy, BaseEmoji[]>>();
+    useState<Record<GroupedBy | "recent", BaseEmoji[] | undefined>>();
 
   const [baseEmojis, setBaseEmojis] = useState<BaseEmoji[] | undefined>();
 
   useEffect(() => {
     import("unicode-emoji").then((unicodeEmoji) => {
-      setGroupedEmojis(
-        unicodeEmoji.getEmojisGroupedBy("category", {
-          versionAbove: "12.0",
-        })
-      );
+      const recentEmojis = getItem<BaseEmoji[]>(LOCAL_STORAGE_RECENT);
+      const emojis = unicodeEmoji.getEmojisGroupedBy("category", {
+        versionAbove: EMOJIS_VERSION,
+      });
 
-      setBaseEmojis(unicodeEmoji.getEmojis());
+      console.log(emojis);
+
+      setGroupedEmojis({
+        recent: recentEmojis || undefined,
+        ...emojis,
+        "face-emotion": [...emojis["face-emotion"], ...emojis["person-people"]],
+      });
+
+      setBaseEmojis(unicodeEmoji.getEmojis({ versionAbove: EMOJIS_VERSION }));
     });
   }, []);
 

@@ -1,71 +1,93 @@
-import DirectionsCarIcon from "@mui/icons-material/DirectionsCar";
-import EmojiObjectsOutlinedIcon from "@mui/icons-material/EmojiObjectsOutlined";
-import FreeBreakfastIcon from "@mui/icons-material/FreeBreakfast";
-import MoodIcon from "@mui/icons-material/Mood";
-import OutlinedFlagTwoToneIcon from "@mui/icons-material/OutlinedFlagTwoTone";
-import PetsIcon from "@mui/icons-material/Pets";
-import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
-import TagOutlinedIcon from "@mui/icons-material/TagOutlined";
 import classNames from "classnames";
-import inView from "element-in-view";
 import React, { FC, useEffect, useRef, useState } from "react";
+import { BaseEmoji, Category } from "unicode-emoji";
+import { LOCAL_STORAGE_RECENT } from "../constants";
 
-import { debounce } from "../utils/debounce";
-import { smoothScroll } from "../utils/smoothScroll";
+import { ActivityIcon } from "../icons/ActivityIcon";
+import { FlagsIcon } from "../icons/FlagsIcon";
+import { FoodIcon } from "../icons/FoodIcon";
+import { NatureIcon } from "../icons/NatureIcon";
+import { ObjectsIcon } from "../icons/ObjectsIcon";
+import { PeopleIcon } from "../icons/PeopleIcon";
+import { RecentIcon } from "../icons/RecentIcon";
+import { SymbolsIcon } from "../icons/SymbolsIcon";
+import { TravelIcon } from "../icons/TravelIcon";
+import { getItem, useLocalStorage } from "../utils/useLocalStorage";
 
 interface Props {
-  isRendered: boolean;
   variant?: "fullWidth" | "default";
-  scrollContentRef: React.RefObject<HTMLDivElement>;
+  value: number;
+  showIndicator?: boolean;
+  onChange(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    newValue: number
+  ): void;
 }
 
-const categories = [
+interface Tab {
+  id: Category | "recent";
+  name: string;
+  icon: JSX.Element;
+}
+
+export const categories: Tab[] = [
+  {
+    id: "recent",
+    name: "Recent",
+    icon: <RecentIcon />,
+  },
   {
     id: "face-emotion",
     name: "Smileys & People",
-    icon: <MoodIcon />,
+    icon: <PeopleIcon />,
   },
   {
     id: "animals-nature",
     name: "Animals & Nature",
-    icon: <PetsIcon />,
+    icon: <NatureIcon />,
   },
   {
     id: "food-drink",
     name: "Food & Drink",
-    icon: <FreeBreakfastIcon />,
+    icon: <FoodIcon />,
   },
   {
     id: "activities-events",
     name: "Activity",
-    icon: <SportsSoccerIcon />,
+    icon: <ActivityIcon />,
   },
   {
     id: "travel-places",
     name: "Travel & Places",
-    icon: <DirectionsCarIcon />,
+    icon: <TravelIcon />,
   },
 
   {
     id: "objects",
     name: "Objects",
-    icon: <EmojiObjectsOutlinedIcon />,
+    icon: <ObjectsIcon />,
   },
   {
     id: "symbols",
     name: "Symbols",
-    icon: <TagOutlinedIcon />,
+    icon: <SymbolsIcon />,
   },
   {
     id: "flags",
     name: "Flags",
-    icon: <OutlinedFlagTwoToneIcon />,
+    icon: <FlagsIcon />,
   },
 ];
 
-export const Tabs: FC<Props> = ({ isRendered, variant, scrollContentRef }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [selected, setSelected] = useState(0);
+export const Tabs: FC<Props> = ({
+  variant,
+  value,
+
+  onChange,
+  showIndicator,
+}) => {
+  const tabsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const [showRecent, setShowRecent] = useState(false);
 
   const [indicatorStyles, setIndicatorStyles] = useState({
     width: 96,
@@ -73,104 +95,71 @@ export const Tabs: FC<Props> = ({ isRendered, variant, scrollContentRef }) => {
   });
 
   useEffect(() => {
-    if (scrollContentRef.current && isRendered) {
-      const target = scrollContentRef.current;
-      const elemCategories = target.querySelectorAll(".emoji-category-bottom");
-
-      target.addEventListener(
-        "scroll",
-        debounce((e: Event) => {
-          const isScrolling = target.classList.contains("scrolling");
-          if (isScrolling) {
-            return;
-          }
-
-          elemCategories.forEach((el, index) => {
-            if (inView(el) && !isScrolling) {
-              const id = el.getAttribute("data-category");
-              setSelected(index);
-              const tab = target.ownerDocument.querySelector(
-                `button[data-id="${id}"]`
-              ) as HTMLElement;
-              if (tab) {
-                setIndicatorStyles({
-                  ...indicatorStyles,
-                  width: tab?.offsetWidth,
-                  left: tab?.offsetLeft,
-                });
-              }
-            }
-          });
-        }, 100)
-      );
+    if (localStorage.getItem(LOCAL_STORAGE_RECENT)) {
+      setShowRecent(true);
     }
-  }, [scrollContentRef, isRendered]);
+
+    // Position 0 is for recent and might not be displayed
+    if (tabsRef.current[1]) {
+      setIndicatorStyles({
+        ...indicatorStyles,
+        width: tabsRef.current[1].offsetWidth,
+      });
+    }
+  }, [tabsRef]);
 
   useEffect(() => {
-    if (ref.current) {
-      const category = ref.current.firstChild as HTMLElement;
-      if (category) {
-        setIndicatorStyles({
-          ...indicatorStyles,
-          width: category.offsetWidth,
-        });
-      }
+    const tab = tabsRef.current[value];
+    if (tab) {
+      setIndicatorStyles({
+        ...indicatorStyles,
+        width: tab.offsetWidth,
+        left: tab.offsetLeft,
+      });
     }
-  }, [ref]);
+  }, [value]);
 
-  const classes = classNames("flex items-center py-2 pt-0 text-primary-200", {
-    "justify-between": variant === "fullWidth",
-  });
+  const classes = classNames(
+    "flex items-center text-gray-400 dark:text-primary-300 dark:shadow-sm h-full overflow-hidden",
+    {
+      "grid grid-flow-col justify-between": variant === "fullWidth",
+    }
+  );
 
   return (
-    <div className="relative w-full mb-1 pt-2">
-      <div ref={ref} className={classes}>
-        {categories.map((category, index) => (
-          <button
-            key={`tabs-${category.id}`}
-            onClick={(e) => {
-              scrollContentRef.current?.classList.add("scrolling");
-              const target = e.currentTarget as HTMLElement;
-
-              setSelected(index);
-              setIndicatorStyles({
-                ...indicatorStyles,
-                width: target.offsetWidth,
-                left: target.offsetLeft,
-              });
-
-              // Find category to be scrolled to
-              const categoryElement = target.ownerDocument.getElementById(
-                category.id
-              );
-
-              if (categoryElement) {
-                const block_type = categoryElement.dataset
-                  .block as ScrollLogicalPosition;
-
-                smoothScroll(categoryElement, { block: block_type }).then(
-                  () => {
-                    scrollContentRef.current?.classList.remove("scrolling");
-                  }
-                );
-              }
-            }}
-            data-id={category.id}
-            title={category.name}
-            className={classNames("px-9 tab", {
-              "text-white": selected === index,
-            })}
-          >
-            {category.icon}
-          </button>
-        ))}
+    <div className="relative w-full mb-1 text-base">
+      <div className={classes}>
+        {categories.map((category, index) =>
+          category.id === "recent" && !showRecent ? null : (
+            <button
+              ref={(el) => {
+                tabsRef.current[index] = el;
+              }}
+              key={`tabs-${category.id}`}
+              onClick={(e) => onChange(e, index)}
+              data-id={category.id}
+              title={category.name}
+              className={classNames("md:px-9 tab outline-none pt-3 pb-2", {
+                "text-gray-600 dark:text-secondary-200":
+                  showIndicator && value === index,
+              })}
+            >
+              <span className="block">{category.icon}</span>
+            </button>
+          )
+        )}
       </div>
-      <span
-        className="indicator h-1 bg-red-400 block absolute"
-        style={{
-          ...indicatorStyles,
-        }}
-      />
+
+      {showIndicator && (
+        <span
+          className={classNames("h-1 bg-green-600 block absolute", {
+            indicator: showIndicator,
+          })}
+          style={{
+            ...indicatorStyles,
+          }}
+        />
+      )}
     </div>
   );
 };
