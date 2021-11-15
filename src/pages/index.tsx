@@ -10,8 +10,10 @@ import { EmojiPicker } from "../components/EmojiPicker";
 export default function Emoji() {
   const [open, setOpen] = useState(true);
   const [emoji, setEmoji] = useState("😀️");
-  const [mode, setMode] = useState("dark");
-  const [tabsVariant, setTabsVariant] = useState("fullWidth");
+  const [mode, setMode] = useState<"dark" | "light">("dark");
+  const [tabsVariant, setTabsVariant] = useState<"fullWidth" | "default">(
+    "fullWidth"
+  );
 
   const [useCustomStyles, setUseCustomStyles] = useState(false);
 
@@ -106,7 +108,7 @@ export default function Emoji() {
           </div>
 
           <div>
-            <p className="mb-2 font-medium">Variant</p>
+            <p className="mb-2 font-medium">Tabs Variant</p>
             <div className="grid grid-flow-col border rounded-md">
               <button
                 className={classNames("p-2.5 border-r", {
