@@ -1,33 +1,29 @@
 import classNames from "classnames";
 import inView from "element-in-view";
-import React, {
-  FC,
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useCallback, useEffect, useRef, useState } from "react";
 import { CSSTransition } from "react-transition-group";
 import { BaseEmoji } from "unicode-emoji";
 
 import { EmojiButton } from "./components/EmojiButton";
 import { categories, Tabs } from "./components/Tabs";
 import { LOCAL_STORAGE_RECENT } from "./constants";
+import { Styles } from "./types/styles";
 import { useLazyUnicodeEmoji } from "./useLazyUnicodeEmoji";
 import { smoothScroll } from "./utils/smoothScroll";
 import { useLocalStorage } from "./utils/useLocalStorage";
 
 interface EmojiPickerProps {
   mode?: "dark" | "light";
-  variant?: "fullWidth" | "default";
+  tabsVariant?: "fullWidth" | "default";
   onEmojiClick?(emoji: string): void;
+  styles?: Styles;
 }
 
 export const EmojiPicker: FC<EmojiPickerProps> = ({
-  variant = "default",
+  tabsVariant = "default",
   mode = "light",
   onEmojiClick,
+  styles,
 }) => {
   const { baseEmojis, groupedEmojis } = useLazyUnicodeEmoji();
 
@@ -118,9 +114,18 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
 
   return (
     <div className={classNames("w-full h-full flex flex-col", mode)}>
-      <div className="dark:text-white w-full h-full flex flex-col bg-gray-100 dark:bg-primary-500 ">
+      <div
+        className="emoji-container"
+        style={{
+          backgroundColor: styles?.backgroundColor,
+        }}
+      >
         <Tabs
-          variant={variant}
+          variant={tabsVariant}
+          styles={{
+            indicatorColor: styles?.indicatorColor,
+            fontColor: styles?.tabsFontColor,
+          }}
           value={tabIndex}
           showIndicator={!search && !resultEmojis}
           onChange={handleTabChange}
@@ -137,11 +142,22 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
               <div
                 id="search-input"
                 className="pr-2 bg-gray-100 dark:bg-primary-500 px-3 py-1.5"
+                style={{
+                  backgroundColor: styles?.backgroundColor,
+                }}
               >
                 <input
                   value={search}
                   type="search"
-                  className="cancel-button w-full rounded px-3 py-2 text-gray-600 dark:text-white  bg-gray-200 dark:bg-primary-400 outline-none"
+                  className="cancel-button w-full rounded-lg md:rounded px-3 py-2 text-gray-600 dark:text-white bg-gray-200 dark:bg-primary-400 outline-none"
+                  style={{
+                    color: styles?.searchFontColor,
+                    backgroundColor: styles?.searchBackgroundColor,
+                    filter:
+                      !!styles && !styles.searchBackgroundColor
+                        ? "grayscale(45%)  brightness(0.9) invert(8%)"
+                        : "",
+                  }}
                   placeholder="Search Emoji"
                   onChange={(e) => setSearch(e.currentTarget.value)}
                 />
@@ -152,7 +168,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
           <div className="w-full px-3 relative h-full select-none">
             {resultEmojis && (
               <div className="emoji-list">
-                <div className="grid grid-cols-flow gap-y-2.5 pr-4">
+                <div className="emoji-grid">
                   {resultEmojis.map((data) => (
                     <EmojiButton
                       key={`search-${data.emoji}`}
@@ -188,7 +204,10 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
                   ({ id, name }, index) =>
                     groupedEmojis[id] && (
                       <div key={id} className="mb-6 relative">
-                        <div className="emoji-category text-gray-400 dark:text-secondary-100 text-sm mb-2">
+                        <div
+                          className="emoji-category text-gray-400 dark:text-secondary-100 text-sm mb-2"
+                          style={{ color: styles?.fontColor }}
+                        >
                           {name}
                         </div>
                         <span
@@ -198,7 +217,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
                           // Match top with parent padding-top
                           className="absolute -top-15"
                         ></span>
-                        <div className="grid grid-cols-flow gap-y-2.5 pr-4">
+                        <div className="emoji-grid">
                           {groupedEmojis[id]!.map((data) => (
                             <EmojiButton
                               key={`${name}-${data.emoji}-${index}`}
@@ -207,10 +226,7 @@ export const EmojiPicker: FC<EmojiPickerProps> = ({
                             />
                           ))}
                         </div>
-                        <span
-                          data-category={id}
-                          className="emoji-category-bottom absolute top-60"
-                        />
+                        <span data-category={id} className="absolute top-60" />
                       </div>
                     )
                 )}

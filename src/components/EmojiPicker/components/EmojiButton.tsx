@@ -11,10 +11,6 @@ interface EmojiButtonProps {
 export const EmojiButton: FC<EmojiButtonProps> = ({ data, onClick }) => {
   const [useProfile, setItem] = useContext(LocalStorageContext);
   const [showVariations, setShowVariations] = useState(false);
-  // const [recentEmojis, setItem] = useLocalStorage<BaseEmoji[]>(
-  //   "emoji-picker-recent",
-  //   []
-  // );
   return (
     <button
       className="text-3xl"

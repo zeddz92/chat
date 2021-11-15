@@ -17,15 +17,13 @@ export const useLazyUnicodeEmoji = () => {
         versionAbove: EMOJIS_VERSION,
       });
 
-      console.log(emojis);
-
       setGroupedEmojis({
         recent: recentEmojis || undefined,
         ...emojis,
         "face-emotion": [...emojis["face-emotion"], ...emojis["person-people"]],
       });
 
-      setBaseEmojis(unicodeEmoji.getEmojis({ versionAbove: EMOJIS_VERSION }));
+      setBaseEmojis(unicodeEmoji.getEmojis({ version: [EMOJIS_VERSION] }));
     });
   }, []);
 
