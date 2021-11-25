@@ -4,8 +4,9 @@ import classNames from "classnames";
 import Head from "next/head";
 import { useState } from "react";
 import { CSSTransition } from "react-transition-group";
+import dynamic from "next/dynamic";
 
-import { EmojiPicker } from "../components/EmojiPicker";
+const EmojiPicker = dynamic(() => import("react-emoji-search"));
 
 export default function Emoji() {
   const [open, setOpen] = useState(true);
